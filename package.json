@@ -1,0 +1,23 @@
+{
+  "name": "segmentoj-judge-leader",
+  "version": "1.0.0",
+  "description": "Segment OJ judger leader",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/segment-oj/segmentoj-judge-leader.git"
+  },
+  "author": "zhangtianli2006",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/segment-oj/segmentoj-judge-leader/issues"
+  },
+  "homepage": "https://github.com/segment-oj/segmentoj-judge-leader#readme",
+  "devDependencies": {
+    "ts-node": "^9.1.1",
+    "typescript": "^4.1.3"
+  }
+}
