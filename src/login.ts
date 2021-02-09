@@ -1,7 +1,6 @@
 import axios from 'axios';
-import * as fs from 'fs';
-import {Config, get_config} from './config';
-import {stdio_read, stdio_write} from './io';
+import { Config, get_config } from './config';
+import { stdio_read, stdio_write } from './io';
 
 let config: Config = get_config();
 
@@ -19,14 +18,22 @@ export function login() {
 
         axios.get(`${config.server_uri}/api/judger/token`)
         .then(res => {
-            console.log('[Login] success');
-            console.log(res.data.res);
+            axios.post(`${config.judger_port_uri}/api/token`, {
+                token: res.data.res,
+            })
+            .then(() => {
+                console.log('[Login] success');
+            })
+            .catch((err) => {
+                console.log(`[Login] judger port login ERR ${err.response.status}: ${err.response.data.detail}`);
+                process.exit(1);
+            });
         }).catch((err) => {
-            console.log('[Login] judger login err');
+            console.log(`[Login] judger login ERR ${err.response.status}: ${err.response.data.detail}`);
             process.exit(1);
         });
-    }).catch(() => {
-        console.log('[Login] account login err');
+    }).catch((err) => {
+        console.log(`[Login] account login ERR ${err.response.status}: ${err.response.data.detail}`);
         process.exit(1);
     });
 }
