@@ -11,11 +11,13 @@ let use_default_config = (conf, def) => {
 
 export interface Config {
     port: number,
+    server_uri: string,
 };
 
 export function get_config(): Config {
     const default_config: Config = {
         port: 3000,
+        server_uri: 'http://localhost:8000',
     };
 
     const config_path = process.env.cfg || './judge-leader.config.json';
