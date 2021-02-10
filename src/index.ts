@@ -34,13 +34,6 @@ login(config)
             console.log(`[Task] get task from server ERR ${err.request.status}`);
         });
     });
-    get_task(config, 1)
-    .then(res => {
-        task_queue.push(res);
-    })
-    .catch(err => {
-        console.log(`[Task] get task from server ERR ${err.request.status}`);
-    });
 
     // Data server check-in
     express_server.post('/api/data-server', (req, res) => {
