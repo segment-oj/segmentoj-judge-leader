@@ -13,6 +13,7 @@ export interface Config {
     port: number,
     server_uri: string,
     judger_port_uri: string,
+    priority: number,
 };
 
 export function get_config(): Config {
@@ -20,6 +21,7 @@ export function get_config(): Config {
         port: 3000,
         server_uri: 'http://localhost:8000',
         judger_port_uri: 'http://localhost:3000',
+        priority: 1,
     };
 
     const config_path = process.env.cfg || './judge-leader.config.json';
@@ -28,7 +30,13 @@ export function get_config(): Config {
         return default_config;
     }
     const content = fs.readFileSync(config_path);
-    let config = JSON.parse(content.toString());
+    
+    let config;
+    try {
+        config = JSON.parse(content.toString());
+    } catch {
+        console.log('[Config] json parsing ERR');
+    }
 
     return use_default_config(config, default_config);
 };

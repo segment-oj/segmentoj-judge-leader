@@ -14,8 +14,7 @@ login()
         }
     });
 
-    // console.log(socket);
-    // socket.emit('set-priority', 10);
+    socket.emit('set-priority', config.priority);
 
     app.listen(config.port, () => {
         console.log(`Serving on port ${config.port}`);
