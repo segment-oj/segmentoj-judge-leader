@@ -1,3 +1,4 @@
+import { Task } from './task';
 import axios from 'axios';
 
 export class DataServer {
@@ -28,5 +29,23 @@ export class DataServerQueue {
 
     push(task: DataServer) {
         this.queue.push(task);
+    }
+
+    get_latest_data(task: Task): string {
+        let found: string = '';
+
+        for (let server of this.queue) {
+            if (found.length == 0) {
+                axios.get(`${server.ip}/api/data/${task.problem}`)
+                .then(res => {
+                    if (res.data.res.testdata_last_update == task.testdata_last_update) {
+                        found = server.ip;
+                    }
+                })
+                .catch(() => {});
+            }
+        }
+
+        return found;
     }
 }
