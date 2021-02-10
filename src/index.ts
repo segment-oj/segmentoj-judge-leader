@@ -6,7 +6,7 @@ express_server.use(express.json());
 
 import { DataServer, DataServerQueue } from './data-server';
 import { Config, get_config } from './config';
-import { get_status } from './server';
+import { get_task } from './server';
 import { TaskQueue } from './task';
 import { login } from './login';
 
@@ -26,7 +26,7 @@ login(config)
 
     // Get task
     socket.on('assign-task', task_id => {
-        get_status(config, task_id)
+        get_task(config, task_id)
         .then(res => {
             task_queue.push(res);
         })
@@ -34,7 +34,15 @@ login(config)
             console.log(`[Task] get task from server ERR ${err.request.status}`);
         });
     });
+    get_task(config, 1)
+    .then(res => {
+        task_queue.push(res);
+    })
+    .catch(err => {
+        console.log(`[Task] get task from server ERR ${err.request.status}`);
+    });
 
+    // Data server check-in
     express_server.post('/api/data-server', (req, res) => {
         data_server_queue.push(new DataServer(req.body.ip));
         res.status(200).end();
