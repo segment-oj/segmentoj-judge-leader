@@ -46,6 +46,6 @@ login(config)
     });
 })
 .catch(err => {
-    console.log(`[Login] login ERR ${err.response.status}: ${err.response.data.detail}`);
+    console.log(`[Login] login ERR`);
     process.exit(1);
 });
