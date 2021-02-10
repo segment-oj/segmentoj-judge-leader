@@ -6,6 +6,7 @@ let use_default_config = (conf, def) => {
             conf[i] = def[i];
         }
     }
+
     return conf;
 };
 

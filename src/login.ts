@@ -8,7 +8,7 @@ export async function login(config: Config) {
     let username = stdio_read('    username: ').trim();
     let password = stdio_read('    password: ').trim();
 
-    let token = 'BAD';
+    let token = '';
 
     await axios.post(`${config.server_uri}/api/account/token`, {
         username: username,

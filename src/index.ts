@@ -1,14 +1,19 @@
 const io = require('socket.io-client');
-import * as express from 'express';
-const app = express();
 
+import * as express from 'express';
+const express_server = express();
+express_server.use(express.json());
+
+import { DataServer, DataServerQueue } from './data-server';
 import { Config, get_config } from './config';
 import { get_status } from './server';
+import { TaskQueue } from './task';
 import { login } from './login';
-import { Task } from './task';
 
 const config: Config = get_config();
-let task_queue = Array<Task>();
+
+let data_server_queue = new DataServerQueue();
+let task_queue = new TaskQueue();
 
 login(config)
 .then(token => {
@@ -30,7 +35,12 @@ login(config)
         });
     });
 
-    app.listen(config.port, () => {
+    express_server.post('/api/data-server', (req, res) => {
+        data_server_queue.push(new DataServer(req.body.ip));
+        res.status(200).end();
+    });
+
+    express_server.listen(config.port, () => {
         console.log(`Serving on port ${config.port}`);
     });
 })
