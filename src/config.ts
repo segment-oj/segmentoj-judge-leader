@@ -13,7 +13,6 @@ export interface Config {
     port: number,
     server_uri: string,
     judger_port_uri: string,
-    priority: number,
 };
 
 export function get_config(): Config {
@@ -21,7 +20,6 @@ export function get_config(): Config {
         port: 3000,
         server_uri: 'http://localhost:8000',
         judger_port_uri: 'http://localhost:3000',
-        priority: 1,
     };
 
     const config_path = process.env.cfg || './judge-leader.config.json';

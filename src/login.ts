@@ -3,9 +3,7 @@ import { Config, get_config } from './config';
 import { stdio_read, stdio_write } from './io';
 const io = require('socket.io-client');
 
-let config: Config = get_config();
-
-export async function login() {
+export async function login(config: Config) {
     stdio_write('[Login]\n');
     let username = stdio_read('    username: ').trim();
     let password = stdio_read('    password: ').trim();
