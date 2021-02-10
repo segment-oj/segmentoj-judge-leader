@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { Config, get_config } from './config';
+
 import { stdio_read, stdio_write } from './io';
-const io = require('socket.io-client');
+import { Config } from './config';
 
 export async function login(config: Config) {
     stdio_write('[Login]\n');

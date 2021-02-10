@@ -1,14 +1,14 @@
+const io = require('socket.io-client');
 import * as express from 'express';
+const app = express();
+
 import { Config, get_config } from './config';
-import { login } from './login';
 import { get_status } from './server';
+import { login } from './login';
 import { Task } from './task';
 
-let task_queue = Array<Task>();
-
-const app = express();
 const config: Config = get_config();
-const io = require('socket.io-client');
+let task_queue = Array<Task>();
 
 login(config)
 .then(token => {
