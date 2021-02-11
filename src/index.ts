@@ -45,7 +45,7 @@ login(config)
         console.log(`Serving on port ${config.port}`);
     });
 })
-.catch(err => {
+.catch(() => {
     console.log(`[Login] login ERR`);
     process.exit(1);
 });
