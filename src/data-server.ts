@@ -69,7 +69,7 @@ export class DataServerQueue {
         return found_ip;
     }
 
-    async get_max_storage() {
+    async get_max_capacity() {
         let max: number = -Infinity;
         let max_ip: string = '';
 
