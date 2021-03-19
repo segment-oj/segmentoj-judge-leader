@@ -16,6 +16,7 @@ const config: Config = get_config();
 let data_server_queue = new DataServerQueue();
 let judger_queue = new JudgerQueue();
 let task_queue = new TaskQueue();
+let judger_parallels = 0;
 
 login(config)
     .then(token => {
@@ -46,6 +47,10 @@ login(config)
         // Judger check-in
         express_server.post('/api/judger', (req, res) => {
             judger_queue.push(new Judger(req.ip, req.body.max_parallel));
+
+            judger_parallels += req.body.max_parallel;
+            socket.emit('set-priority', judger_parallels);
+
             res.status(200).end();
         });
 
