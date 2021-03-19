@@ -44,7 +44,7 @@ login(config)
         });
 
         // Judger check-in
-        express_server.post('api/judger', (req, res) => {
+        express_server.post('/api/judger', (req, res) => {
             judger_queue.push(new Judger(req.body.uid, req.body.ip, req.body.max_parallel));
             res.status(200).end();
         });
