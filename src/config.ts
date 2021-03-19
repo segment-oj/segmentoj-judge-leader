@@ -14,13 +14,17 @@ export interface Config {
     port: number,
     server_uri: string,
     judger_port_uri: string,
+    username: string,
+    password: string,
 };
 
 export function get_config(): Config {
     const default_config: Config = {
-        port: 3000,
+        port: 4000,
         server_uri: 'http://localhost:8000',
         judger_port_uri: 'http://localhost:3000',
+        username: 'judge-leader',
+        password: '123456',
     };
 
     const config_path = process.env.cfg || './judge-leader.config.json';

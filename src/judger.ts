@@ -1,11 +1,9 @@
 export class Judger {
-    constructor(uid: number, ip: string, max_parallel: number) {
-        this.uid = uid;
+    constructor(ip: string, max_parallel: number) {
         this.ip = ip;
         this.max_parallel = max_parallel;
     }
 
-    uid: number;
     ip: string;
     max_parallel: number;
 }

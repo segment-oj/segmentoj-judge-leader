@@ -39,13 +39,13 @@ login(config)
 
         // Data server check-in
         express_server.post('/api/data-server', (req, res) => {
-            data_server_queue.push(new DataServer(req.body.ip));
+            data_server_queue.push(new DataServer(req.ip));
             res.status(200).end();
         });
 
         // Judger check-in
         express_server.post('/api/judger', (req, res) => {
-            judger_queue.push(new Judger(req.body.uid, req.body.ip, req.body.max_parallel));
+            judger_queue.push(new Judger(req.ip, req.body.max_parallel));
             res.status(200).end();
         });
 
