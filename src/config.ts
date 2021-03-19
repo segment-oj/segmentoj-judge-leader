@@ -12,6 +12,7 @@ let use_default_config = (conf, def) => {
 
 export interface Config {
     port: number,
+    ws_port: number,
     server_uri: string,
     judger_port_uri: string,
     username: string,
@@ -21,6 +22,7 @@ export interface Config {
 export function get_config(): Config {
     const default_config: Config = {
         port: 4000,
+        ws_port: 5000,
         server_uri: 'http://localhost:8000',
         judger_port_uri: 'http://localhost:3000',
         username: 'judge-leader',

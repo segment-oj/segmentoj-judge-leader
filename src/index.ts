@@ -1,5 +1,6 @@
 const io = require('socket.io-client');
 
+const WebSocket = require('ws');
 import * as express from 'express';
 const express_server = express();
 express_server.use(express.json());
@@ -20,15 +21,23 @@ let judger_parallels = 0;
 
 login(config)
     .then(token => {
-        const socket = io(config.judger_port_uri, {
+        console.log('[Login] Success');
+
+        // Socket.io connection with judger port
+        const judger_port_socket = io(config.judger_port_uri, {
             auth: { token: token, }
         });
 
+        // WebSocket server for judgers
+        const judger_socket = new WebSocket.Server({
+            port: config.ws_port,
+        });
+
         // Initial priority
-        socket.emit('set-priority', 0);
+        judger_port_socket.emit('set-priority', 0);
 
         // Get task
-        socket.on('assign-task', task_id => {
+        judger_port_socket.on('assign-task', task_id => {
             get_task(config, task_id)
                 .then(res => {
                     task_queue.push(res);
@@ -49,7 +58,7 @@ login(config)
             judger_queue.push(new Judger(req.ip, req.body.max_parallel));
 
             judger_parallels += req.body.max_parallel;
-            socket.emit('set-priority', judger_parallels);
+            judger_port_socket.emit('set-priority', judger_parallels);
 
             res.status(200).end();
         });
