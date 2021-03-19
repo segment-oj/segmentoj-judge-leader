@@ -18,41 +18,42 @@ let judger_queue = new JudgerQueue();
 let task_queue = new TaskQueue();
 
 login(config)
-.then(token => {
-    const socket = io(config.judger_port_uri, {
-        auth: { token: token, }
-    });
-
-    // Initial priority
-    socket.emit('set-priority', 0);
-
-    // Get task
-    socket.on('assign-task', task_id => {
-        get_task(config, task_id)
-        .then(res => {
-            task_queue.push(res);
-        })
-        .catch(err => {
-            console.log(`[Task] get task from server ERR ${err.request.status}`);
+    .then(token => {
+        const socket = io(config.judger_port_uri, {
+            auth: { token: token, }
         });
-    });
 
-    // Data server check-in
-    express_server.post('/api/data-server', (req, res) => {
-        data_server_queue.push(new DataServer(req.body.ip));
-        res.status(200).end();
-    });
+        // Initial priority
+        socket.emit('set-priority', 0);
 
-    express_server.post('api/judger', (req, res) => {
-        judger_queue.push(new Judger(req.body.uid, req.body.ip, req.body.max_parallel));
-        res.status(200).end();
-    });
+        // Get task
+        socket.on('assign-task', task_id => {
+            get_task(config, task_id)
+                .then(res => {
+                    task_queue.push(res);
+                })
+                .catch(err => {
+                    console.log(`[Task] get task from server ERR ${err.request.status}`);
+                });
+        });
 
-    express_server.listen(config.port, () => {
-        console.log(`Serving on port ${config.port}`);
+        // Data server check-in
+        express_server.post('/api/data-server', (req, res) => {
+            data_server_queue.push(new DataServer(req.body.ip));
+            res.status(200).end();
+        });
+
+        // Judger check-in
+        express_server.post('api/judger', (req, res) => {
+            judger_queue.push(new Judger(req.body.uid, req.body.ip, req.body.max_parallel));
+            res.status(200).end();
+        });
+
+        express_server.listen(config.port, () => {
+            console.log(`Serving on port ${config.port}`);
+        });
+    })
+    .catch(() => {
+        console.log(`[Login] login ERR`);
+        process.exit(1);
     });
-})
-.catch(() => {
-    console.log(`[Login] login ERR`);
-    process.exit(1);
-});
