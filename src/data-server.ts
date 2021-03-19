@@ -1,24 +1,23 @@
 import { Task } from './task';
 import axios from 'axios';
-import { copyFileSync } from 'fs';
 
 export class DataServer {
     constructor(ip: string) {
         this.ip = ip;
     }
 
-    ip: string
-    
+    ip: string;
+
     async check_data(pid: number) {
         let res: boolean = false;
 
         await axios.get(`${this.ip}/api/data/${pid}`)
-        .then(ret => {
-            res = ret.data.res;
-        })
-        .catch(() => {
-            console.log(`[Data Server] check data Err on server ${this.ip}`);
-        });
+            .then(ret => {
+                res = ret.data.res;
+            })
+            .catch(() => {
+                console.log(`[Data Server] check data Err on server ${this.ip}`);
+            });
 
         return res;
     }
@@ -27,12 +26,12 @@ export class DataServer {
         let res: number = 0;
 
         await axios.get(`${this.ip}/api/capacity`)
-        .then(ret => {
-            res = ret.data.res;
-        })
-        .catch(() => {
-            console.log(`[Data Server] check capacity Err on server ${this.ip}`);
-        });
+            .then(ret => {
+                res = ret.data.res;
+            })
+            .catch(() => {
+                console.log(`[Data Server] check capacity Err on server ${this.ip}`);
+            });
 
         return res;
     }
@@ -45,8 +44,8 @@ export class DataServerQueue {
 
     queue: Array<DataServer>;
 
-    push(task: DataServer) {
-        this.queue.push(task);
+    push(server: DataServer) {
+        this.queue.push(server);
     }
 
     async get_latest_data(task: Task) {
@@ -55,12 +54,12 @@ export class DataServerQueue {
         for (let server of this.queue) {
             if (found_ip.length == 0) {
                 await axios.get(`${server.ip}/api/data/${task.problem}`)
-                .then(res => {
-                    if (res.data.res.testdata_last_update == task.testdata_last_update) {
-                        found_ip = server.ip;
-                    }
-                })
-                .catch(() => {});
+                    .then(res => {
+                        if (res.data.res.testdata_last_update == task.testdata_last_update) {
+                            found_ip = server.ip;
+                        }
+                    })
+                    .catch(() => { });
             } else {
                 break;
             }

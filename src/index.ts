@@ -5,6 +5,7 @@ const express_server = express();
 express_server.use(express.json());
 
 import { DataServer, DataServerQueue } from './data-server';
+import { Judger, JudgerQueue } from './judger';
 import { Config, get_config } from './config';
 import { get_task } from './server';
 import { TaskQueue } from './task';
@@ -13,6 +14,7 @@ import { login } from './login';
 const config: Config = get_config();
 
 let data_server_queue = new DataServerQueue();
+let judger_queue = new JudgerQueue();
 let task_queue = new TaskQueue();
 
 login(config)
@@ -38,6 +40,11 @@ login(config)
     // Data server check-in
     express_server.post('/api/data-server', (req, res) => {
         data_server_queue.push(new DataServer(req.body.ip));
+        res.status(200).end();
+    });
+
+    express_server.post('api/judger', (req, res) => {
+        judger_queue.push(new Judger(req.body.uid, req.body.ip, req.body.max_parallel));
         res.status(200).end();
     });
 
