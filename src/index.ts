@@ -34,10 +34,11 @@ login(config)
         });
 
         // Initial priority
-        judger_port_socket.emit('set-priority', 0);
+        judger_port_socket.emit('set-priority', 1);
 
         // Get task
         judger_port_socket.on('assign-task', task_id => {
+            console.log(task_id);
             get_task(config, task_id)
                 .then(res => {
                     task_queue.push(res);

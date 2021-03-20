@@ -23,6 +23,5 @@ export async function login(config: Config) {
         throw err;
     }
 
-    axios.defaults.headers.common['Authorization'] = '';
     return token;
 }
