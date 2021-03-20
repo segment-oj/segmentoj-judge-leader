@@ -68,6 +68,6 @@ login(config)
         });
     })
     .catch(() => {
-        console.log(`[Login] login ERR`);
+        console.log(`[Login] ERR`);
         process.exit(1);
     });

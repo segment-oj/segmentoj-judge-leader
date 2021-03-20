@@ -4,7 +4,7 @@
   "description": "Segment OJ judger leader",
   "main": "src/index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "serve": "ts-node src/index.ts"
   },
   "repository": {
     "type": "git",
