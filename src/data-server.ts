@@ -12,7 +12,7 @@ export class DataServer {
         let res: boolean = false;
 
         try {
-            let ret = await axios.get(`${this.ip}/api/data/${pid}`);
+            let ret = await axios.get(`http://${this.ip}/api/data/${pid}`);
             res = ret.data.res;
         } catch (err) {
             console.log(`[Data Server] check data Err on server ${this.ip} ${err.errno}`);
@@ -52,7 +52,7 @@ export class DataServerQueue {
         for (let server of this.queue) {
             if (found_ip.length == 0) {
                 try {
-                    let res = await axios.get(`${server.ip}/api/data/${task.problem}`);
+                    let res = await axios.get(`http://${server.ip}/api/data/${task.problem}`);
                     if (res.data.res.testdata_last_update == task.testdata_last_update) {
                         found_ip = server.ip;
                     }

@@ -59,7 +59,9 @@ login(config)
 
         // Judger check-in
         express_server.post('/api/judger', (req, res) => {
-            judger_queue.push(new Judger(req.ip, req.body.max_parallel));
+            const ip = `${req.ip.match(/\d+\.\d+\.\d+\.\d+/)[0]}:${req.body.port}`;
+            
+            judger_queue.push(new Judger(ip, req.body.max_parallel));
 
             judger_parallels += req.body.max_parallel;
             judger_port_socket.emit('set-priority', judger_parallels);
