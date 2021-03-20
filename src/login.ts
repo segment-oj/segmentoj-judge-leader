@@ -6,7 +6,7 @@ export async function login(config: Config) {
     let token = '';
 
     try {
-        let res = await axios.post(`${config.server_uri}/api/account/token`, {
+        const res = await axios.post(`${config.server_uri}/api/account/token`, {
             username: config.username,
             password: config.password
         });
@@ -14,7 +14,7 @@ export async function login(config: Config) {
         axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.access}`;
 
         try {
-            let res = await axios.get(`${config.server_uri}/api/judger/token`);
+            const res = await axios.get(`${config.server_uri}/api/judger/token`);
             token = res.data.res;
         } catch (err) {
             throw err;
