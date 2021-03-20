@@ -49,7 +49,11 @@ login(config)
 
         // Data server check-in
         express_server.post('/api/data-server', (req, res) => {
-            data_server_queue.push(new DataServer(req.ip));
+            const ip = `${req.ip.match(/\d+\.\d+\.\d+\.\d+/)[0]}:${req.body.port}`;
+            data_server_queue.push(new DataServer(ip));
+
+            console.log(`[Data Server] check-in on IP ${ip}`);
+
             res.status(200).end();
         });
 

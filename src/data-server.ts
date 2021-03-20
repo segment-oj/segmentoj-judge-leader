@@ -11,13 +11,12 @@ export class DataServer {
     async check_data(pid: number) {
         let res: boolean = false;
 
-        await axios.get(`${this.ip}/api/data/${pid}`)
-            .then(ret => {
-                res = ret.data.res;
-            })
-            .catch(() => {
-                console.log(`[Data Server] check data Err on server ${this.ip}`);
-            });
+        try {
+            let ret = await axios.get(`${this.ip}/api/data/${pid}`);
+            res = ret.data.res;
+        } catch (err) {
+            console.log(`[Data Server] check data Err on server ${this.ip} ${err.errno}`);
+        }
 
         return res;
     }
@@ -25,13 +24,12 @@ export class DataServer {
     async get_disk_capacity() {
         let res: number = 0;
 
-        await axios.get(`${this.ip}/api/capacity`)
-            .then(ret => {
-                res = ret.data.res;
-            })
-            .catch(() => {
-                console.log(`[Data Server] check capacity Err on server ${this.ip}`);
-            });
+        try {
+            let ret = await axios.get(`http://${this.ip}/api/capacity`);
+            res = ret.data.res;
+        } catch (err) {
+            console.log(`[Data Server] check capacity Err on server ${this.ip} ${err.errno}`);
+        }
 
         return res;
     }
@@ -53,13 +51,13 @@ export class DataServerQueue {
 
         for (let server of this.queue) {
             if (found_ip.length == 0) {
-                await axios.get(`${server.ip}/api/data/${task.problem}`)
-                    .then(res => {
-                        if (res.data.res.testdata_last_update == task.testdata_last_update) {
-                            found_ip = server.ip;
-                        }
-                    })
-                    .catch(() => { });
+                try {
+                    let res = await axios.get(`${server.ip}/api/data/${task.problem}`);
+                    if (res.data.res.testdata_last_update == task.testdata_last_update) {
+                        found_ip = server.ip;
+                    }
+                }
+                catch { }
             } else {
                 break;
             }
@@ -68,12 +66,13 @@ export class DataServerQueue {
         return found_ip;
     }
 
-    async get_max_capacity() {
+    get_max_capacity() {
         let max: number = -Infinity;
         let max_ip: string = '';
 
         for (let server of this.queue) {
-            let capacity: number = await server.get_disk_capacity();
+            let capacity: number = 0;
+            server.get_disk_capacity().then(res => { capacity = res });
             if (capacity > max) {
                 max = capacity;
                 max_ip = server.ip;
