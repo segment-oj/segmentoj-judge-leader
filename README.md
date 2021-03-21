@@ -12,7 +12,7 @@ npm install
 ```
 3. Serve
 ```zsh
-npm serve
+npm run serve
 ```
 
 ## Configure
