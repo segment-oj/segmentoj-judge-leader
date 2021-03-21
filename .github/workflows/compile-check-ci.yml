@@ -28,7 +28,7 @@ jobs:
         run: npm install
       
       - name: npm compile
-        run: npm compile
+        run: npm run compile
 
   windows:
     runs-on: windows-2019
@@ -53,6 +53,6 @@ jobs:
         run: npm install
       
       - name: npm compile
-        run: npm compile
+        run: npm run compile
         
  
