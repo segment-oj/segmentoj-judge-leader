@@ -1,4 +1,4 @@
-# segmentoj-judge-leader
+# Sgmentoj Judge Leader
 Segment OJ judger leader
 
 ## How To Build
@@ -29,6 +29,7 @@ Available configures and their default values.
     "password": "123456"
 }
 ```
+
 |Config Name|Meaning|
 |:--|--|
 |`port`|The HTTP Server Port|
