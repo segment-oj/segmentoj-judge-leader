@@ -4,7 +4,8 @@
   "description": "Segment OJ judger leader",
   "main": "src/index.ts",
   "scripts": {
-    "serve": "ts-node src/index.ts"
+    "serve": "ts-node src/index.ts",
+    "compile": "tsc src/index.ts"
   },
   "repository": {
     "type": "git",
