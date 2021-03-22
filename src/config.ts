@@ -35,7 +35,7 @@ export function get_config(): Config {
         return default_config;
     }
     const content = fs.readFileSync(config_path);
-    
+
     let config;
     try {
         config = JSON.parse(content.toString());
