@@ -1,11 +1,13 @@
 export class Judger {
-    constructor(ip: string, max_parallel: number) {
+    constructor(ip: string, max_thread: number, used_thread: number) {
         this.ip = ip;
-        this.max_parallel = max_parallel;
+        this.max_thread = max_thread;
+        this.used_thread = used_thread;
     }
 
     ip: string;
-    max_parallel: number;
+    max_thread: number;
+    used_thread: number;
 }
 
 export class JudgerQueue {
@@ -19,3 +21,5 @@ export class JudgerQueue {
         this.queue.push(server);
     }
 }
+
+export let judger_queue: JudgerQueue = new JudgerQueue();

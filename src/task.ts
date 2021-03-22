@@ -1,3 +1,6 @@
+import axios from "axios";
+import { judger_queue } from "./judger";
+
 export class Task {
     constructor(data) {
         this.id = data.id;
@@ -32,8 +35,50 @@ export class TaskQueue {
     push(task: Task) {
         this.queue.push(task);
     }
-
-    // function assigner() {
-    //     setInterval 
-    // }
 }
+
+export class TaskAssigner {
+    start() {
+        setInterval(this.assign_task, 10);
+    }
+
+    assign_task() {
+        if (task_queue.queue.length <= 0) {
+            return;
+        }
+
+        const task: Task = task_queue.queue[0];
+
+        for (let i = 0; i < judger_queue.queue.length; i++) {
+            const judger = judger_queue.queue[i];
+
+            if (judger.max_thread - judger.used_thread <= 0) {
+                continue;
+            }
+
+            try {
+                axios.post(`http://${judger.ip}/api/task`, {
+                    problem: task.problem,
+                    lang: task.lang,
+                    lang_info: task.lang_info,
+                    time_limit: task.time_limit,
+                    memory_limit: task.memory_limit,
+                    testdata_url: task.testdata_url,
+                    code: task.code,
+                })
+                    .then(() => {
+                        judger_queue.queue[i].used_thread++;
+                        task_queue.queue.splice(0, 1);
+                    })
+                    .catch((err) => {
+                        throw err;
+                    });
+            } catch (err) {
+                console.log(`[Judger] Cannot send task to Judger ${judger.ip} ${err.errno}`);
+                continue;
+            }
+        }
+    }
+}
+
+export let task_queue: TaskQueue = new TaskQueue();

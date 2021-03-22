@@ -4,23 +4,23 @@ import * as express from 'express';
 const express_server = express();
 express_server.use(express.json());
 
-import { DataServer, DataServerQueue } from './data-server';
-import { Judger, JudgerQueue } from './judger';
+import { DataServer, data_server_queue } from './data-server';
+import { Judger, judger_queue } from './judger';
 import { Config, get_config } from './config';
 import { get_task } from './server';
-import { TaskQueue } from './task';
+import { TaskAssigner, task_queue } from './task';
 import { login } from './login';
 
 const config: Config = get_config();
-
-let data_server_queue = new DataServerQueue();
-let judger_queue = new JudgerQueue();
-let task_queue = new TaskQueue();
-let judger_parallels = 0;
+let judger_threads = 0;
 
 login(config)
     .then(token => {
         console.log('[Login] Success');
+
+        // Set up task assigner
+        let task_assigner: TaskAssigner = new TaskAssigner();
+        task_assigner.start();
 
         // Socket.io connection with judger port
         const judger_port_socket = io(config.judger_port_uri, {
@@ -56,10 +56,10 @@ login(config)
         express_server.post('/api/judger', (req, res) => {
             const ip = `${req.ip.match(/\d+\.\d+\.\d+\.\d+/)[0]}:${req.body.port}`;
 
-            judger_queue.push(new Judger(ip, req.body.max_parallel));
+            judger_queue.push(new Judger(ip, req.body.max_thread, 0));
 
-            judger_parallels += req.body.max_parallel;
-            judger_port_socket.emit('set-priority', judger_parallels);
+            judger_threads += req.body.max_thread;
+            judger_port_socket.emit('set-priority', judger_threads);
 
             res.status(200).end();
         });

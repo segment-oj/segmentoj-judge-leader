@@ -82,3 +82,5 @@ export class DataServerQueue {
         return max_ip;
     }
 }
+
+export let data_server_queue: DataServerQueue = new DataServerQueue();
