@@ -1,6 +1,5 @@
 const io = require('socket.io-client');
 
-const WebSocket = require('ws');
 import * as express from 'express';
 const express_server = express();
 express_server.use(express.json());
@@ -28,13 +27,8 @@ login(config)
             auth: { token: token, }
         });
 
-        // WebSocket server for judgers
-        const judger_socket = new WebSocket.Server({
-            port: config.ws_port,
-        });
-
         // Initial priority
-        judger_port_socket.emit('set-priority', 1);
+        judger_port_socket.emit('set-priority', 0);
 
         // Get task
         judger_port_socket.on('assign-task', task_id => {

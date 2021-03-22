@@ -27,7 +27,6 @@
   "dependencies": {
     "axios": "^0.21.1",
     "express": "^4.17.1",
-    "socket.io-client": "^3.1.1",
-    "ws": "^7.4.4"
+    "socket.io-client": "^3.1.1"
   }
 }
