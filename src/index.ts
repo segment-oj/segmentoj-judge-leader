@@ -10,6 +10,7 @@ import { Config, get_config } from './config';
 import { get_task } from './server';
 import { TaskAssigner, task_queue } from './task';
 import { login } from './login';
+import { parse_ip } from './utilities';
 
 const config: Config = get_config();
 let judger_threads = 0;
@@ -32,7 +33,8 @@ login(config)
 
         // Get task
         judger_port_socket.on('assign-task', task_id => {
-            console.log(task_id);
+            console.log(`[Task] got task ID: ${task_id} from Judger-Port`);
+
             get_task(config, task_id)
                 .then(res => {
                     task_queue.push(res);
@@ -44,7 +46,7 @@ login(config)
 
         // Data server check-in
         express_server.post('/api/data-server', (req, res) => {
-            const ip = `${req.ip.match(/\d+\.\d+\.\d+\.\d+/)[0]}:${req.body.port}`;
+            const ip = parse_ip(req);
             data_server_queue.push(new DataServer(ip));
 
             console.log(`[Data Server] check-in on IP ${ip}`);
@@ -54,15 +56,30 @@ login(config)
 
         // Judger check-in
         express_server.post('/api/judger', (req, res) => {
-            const ip = `${req.ip.match(/\d+\.\d+\.\d+\.\d+/)[0]}:${req.body.port}`;
+            const ip = parse_ip(req);
 
             judger_queue.push(new Judger(ip, req.body.max_thread, 0));
 
             judger_threads += req.body.max_thread;
             judger_port_socket.emit('set-priority', judger_threads);
 
+            console.log(`[Judger] check-in on IP ${ip}`);
+
             res.status(200).end();
         });
+
+        // Judger finish task
+        express_server.delete('/api/task', (req, res) => {
+            const ip = parse_ip(req);
+
+            for (let i = 0; i < judger_queue.queue.length; i++) {
+                if (judger_queue.queue[i].ip == ip) {
+                    judger_queue.queue[i].used_thread--;
+                }
+            }
+
+            res.status(200).end();
+        })
 
         express_server.listen(config.port, () => {
             console.log(`Serving on port ${config.port}`);
