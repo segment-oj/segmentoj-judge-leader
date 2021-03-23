@@ -66,13 +66,13 @@ export class DataServerQueue {
         return found_ip;
     }
 
-    get_max_capacity() {
+    async get_max_capacity() {
         let max: number = -Infinity;
         let max_ip: string = '';
 
         for (let server of this.queue) {
-            let capacity: number = 0;
-            server.get_disk_capacity().then(res => { capacity = res });
+            let capacity = await server.get_disk_capacity();
+
             if (capacity > max) {
                 max = capacity;
                 max_ip = server.ip;
@@ -81,6 +81,7 @@ export class DataServerQueue {
 
         return max_ip;
     }
+
 }
 
 export let data_server_queue: DataServerQueue = new DataServerQueue();
