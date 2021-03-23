@@ -68,6 +68,7 @@ export class TaskAssigner {
                 })
                     .then(() => {
                         judger_queue.queue[i].used_thread++;
+                        running_task_queue.push(task_queue.queue[0]);
                         task_queue.queue.splice(0, 1);
                     })
                     .catch((err) => {
@@ -82,3 +83,4 @@ export class TaskAssigner {
 }
 
 export let task_queue: TaskQueue = new TaskQueue();
+export let running_task_queue: TaskQueue = new TaskQueue();

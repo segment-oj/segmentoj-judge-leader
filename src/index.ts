@@ -8,7 +8,7 @@ import { DataServer, data_server_queue } from './data-server';
 import { Judger, judger_queue } from './judger';
 import { Config, get_config } from './config';
 import { get_task } from './server';
-import { TaskAssigner, task_queue } from './task';
+import { TaskAssigner, task_queue, running_task_queue } from './task';
 import { login } from './login';
 import { parse_ip } from './utilities';
 
@@ -71,12 +71,21 @@ login(config)
         // Judger finish task
         express_server.delete('/api/task', (req, res) => {
             const ip = parse_ip(req);
+            for (let i = 0; i < running_task_queue.queue.length; i++) {
+                if (running_task_queue.queue[i].id == req.body.id) {
+                    running_task_queue.queue.splice(i, 1);
+                    break;
+                }
+            }
 
             for (let i = 0; i < judger_queue.queue.length; i++) {
                 if (judger_queue.queue[i].ip == ip) {
                     judger_queue.queue[i].used_thread--;
+                    break;
                 }
             }
+
+            console.log(`[Judger] finish task ID: ${req.body.id}`);
 
             res.status(200).end();
         })
