@@ -1,6 +1,11 @@
 # Sgmentoj Judge Leader
 Segment OJ judger leader
 
+![](https://img.shields.io/github/license/segment-oj/segmentoj-judge-leader?style=flat-square)
+![](https://img.shields.io/github/repo-size/segment-oj/segmentoj-judge-leader?style=flat-square)
+![](https://img.shields.io/github/workflow/status/segment-oj/segmentoj-judge-leader/Compile%20Check%20CI?style=flat-square)
+![](https://img.shields.io/github/last-commit/segment-oj/segmentoj-judge-leader?style=flat-square)
+
 ## How To Build
 1. Clone repo
 ```zsh
