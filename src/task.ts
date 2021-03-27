@@ -77,7 +77,7 @@ export class TaskAssigner {
 
                 if (judger_queue.queue[i].err_times >= 5) {
                     console.log(`[Judger] ERR: Expelled judger on IP: ${judger_queue.queue[i].ip} (ERR for ${judger_queue.queue[i].err_times} times)`);
-                    setTimeout(() => { judger_queue.queue.splice(i, 1) }, 5);
+                    setTimeout(() => { judger_queue.queue.splice(i, 1); }, 5);
                 }
 
                 continue;
