@@ -3,11 +3,13 @@ export class Judger {
         this.ip = ip;
         this.max_thread = max_thread;
         this.used_thread = used_thread;
+        this.err_times = 0;
     }
 
     ip: string;
     max_thread: number;
     used_thread: number;
+    err_times: number;
 }
 
 export class JudgerQueue {

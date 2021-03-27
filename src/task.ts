@@ -71,8 +71,13 @@ export class TaskAssigner {
                         running_task_queue.push(task_queue.queue[0]);
                         task_queue.queue.splice(0, 1);
                     })
-                    .catch((err) => {
-                        throw err;
+                    .catch(() => {
+                        judger_queue.queue[i].err_times++;
+
+                        if (judger_queue.queue[i].err_times >= 10) {
+                            console.log(`[Judger] ERR: Expelled judger on IP: ${judger_queue.queue[i].ip} (ERR for ${judger_queue.queue[i].err_times} times)`);
+                            setTimeout(() => { judger_queue.queue.splice(i, 1) }, 5);
+                        }
                     });
             } catch (err) {
                 console.log(`[Judger] Cannot send task to Judger ${judger.ip} ${err.errno}`);

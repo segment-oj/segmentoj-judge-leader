@@ -33,14 +33,14 @@ login(config)
 
         // Get task
         judger_port_socket.on('assign-task', task_id => {
-            console.log(`[Task] got task ID: ${task_id} from Judger-Port`);
+            console.log(`[Task] Got task ID: ${task_id} from Judger-Port`);
 
             get_task(config, task_id)
                 .then(res => {
                     task_queue.push(res);
                 })
                 .catch(err => {
-                    console.log(`[Task] get task from server ERR ${err.request.status}`);
+                    console.log(`[Task] Get task from server ERR ${err.request.status}`);
                 });
         });
 
@@ -51,10 +51,10 @@ login(config)
             try {
                 if (!data_server_queue.find(ip)) {
                     data_server_queue.push(new DataServer(ip));
-                    console.log(`[Data-Server] check-in on IP ${ip}`);
+                    console.log(`[Data-Server] Check-in on IP ${ip}`);
                 } else {
                     data_server_queue.edit(ip, new DataServer(ip));
-                    console.log(`[Data-Server] recheck-in on IP ${ip}`);
+                    console.log(`[Data-Server] Recheck-in on IP ${ip}`);
                 }
 
                 res.status(200).end();
@@ -75,10 +75,10 @@ login(config)
                     judger_threads += req.body.max_thread;
                     judger_port_socket.emit('set-priority', judger_threads);
 
-                    console.log(`[Judger] check-in on IP ${ip}`);
+                    console.log(`[Judger] Check-in on IP ${ip}`);
                 } else {
                     judger_queue.edit(ip, new Judger(ip, req.body.max_thread, 0));
-                    console.log(`[Judger] recheck-in on IP ${ip}`);
+                    console.log(`[Judger] Recheck-in on IP ${ip}`);
                 }
 
                 res.status(200).end();
@@ -105,7 +105,7 @@ login(config)
                 }
             }
 
-            console.log(`[Judger] finish task ID: ${req.body.id}`);
+            console.log(`[Judger] Finished task ID: ${req.body.id}`);
 
             res.status(200).end();
         })
