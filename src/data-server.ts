@@ -15,7 +15,7 @@ export class DataServer {
             const ret = await axios.get(`http://${this.ip}/api/data/${pid}`);
             res = ret.data.res;
         } catch (err) {
-            console.log(`[Data Server] check data Err on server ${this.ip} ${err.errno}`);
+            console.log(`[Data-Server] ERR: Cannot check data from server ${this.ip} ${err.errno}`);
         }
 
         return res;
@@ -28,7 +28,7 @@ export class DataServer {
             const ret = await axios.get(`http://${this.ip}/api/capacity`);
             res = ret.data.res;
         } catch (err) {
-            console.log(`[Data Server] check capacity Err on server ${this.ip} ${err.errno}`);
+            console.log(`[Data-Server] ERR: Cannot check capacity from server ${this.ip} ${err.errno}`);
         }
 
         return res;

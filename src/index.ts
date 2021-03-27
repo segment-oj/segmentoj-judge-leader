@@ -44,22 +44,22 @@ login(config)
                 });
         });
 
-        // Data server check-in
+        // Data-Server check-in
         express_server.post('/api/data-server', (req, res) => {
             const ip = parse_ip(req);
 
             try {
                 if (!data_server_queue.find(ip)) {
                     data_server_queue.push(new DataServer(ip));
-                    console.log(`[Data Server] check-in on IP ${ip}`);
+                    console.log(`[Data-Server] check-in on IP ${ip}`);
                 } else {
                     data_server_queue.edit(ip, new DataServer(ip));
-                    console.log(`[Data Server] recheck-in on IP ${ip}`);
+                    console.log(`[Data-Server] recheck-in on IP ${ip}`);
                 }
 
                 res.status(200).end();
             } catch (err) {
-                console.log(`[Data Server] ERR: Check-in (${err})`);
+                console.log(`[Data-Server] ERR: Check-in (${err})`);
                 res.status(500).end();
             }
         });
