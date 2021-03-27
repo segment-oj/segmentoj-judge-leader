@@ -50,19 +50,20 @@ export class DataServerQueue {
         let found_ip: string = '';
 
         for (let server of this.queue) {
-            if (found_ip.length == 0) {
-                try {
-                    const res = await axios.get(`http://${server.ip}/api/data/${task.problem}`);
-                    if (res.data.res.testdata_last_update == task.testdata_last_update) {
-                        found_ip = server.ip;
-                    }
+            try {
+                const res = await axios.get(`http://${server.ip}/api/data/${task.problem}`);
+
+                if (res.data.exist && res.data.time == task.testdata_last_update) {
+                    found_ip = server.ip;
+                    break;
                 }
-                catch { }
-            } else {
-                break;
             }
+            catch { }
         }
 
+        if (found_ip.length <= 0) {
+            return false;
+        }
         return found_ip;
     }
 
@@ -100,7 +101,7 @@ export class DataServerQueue {
             }
         }
 
-        throw "Data-Server not found";
+        throw new Error("Data-Server not found");
     }
 }
 

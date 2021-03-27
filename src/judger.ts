@@ -41,7 +41,7 @@ export class JudgerQueue {
             }
         }
 
-        throw "Judger not found";
+        throw new Error("Judger not found");
     }
 }
 

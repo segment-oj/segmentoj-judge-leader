@@ -33,7 +33,7 @@ login(config)
 
         // Get task
         judger_port_socket.on('assign-task', task_id => {
-            console.log(`[Task] Got task ID: ${task_id} from Judger-Port`);
+            console.log(`[Task] Got task ID: ${task_id}`);
 
             get_task(config, task_id)
                 .then(res => {
