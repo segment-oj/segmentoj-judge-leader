@@ -16,13 +16,17 @@ export class AsyncQueue<T> {
         });
     }
 
+    length() {
+        return this.data.length;
+    }
+
     isNotEmpty() {
         return this.data.length > this.front_index;
     }
 
     popFront() {
         if (!this.isNotEmpty()) {
-            throw new Error('Queue is empty!');
+            throw new Error('Queue is empty');
         }
 
         this.front_index += 1;
@@ -40,13 +44,8 @@ export class AsyncQueue<T> {
         this.ondata_callbacks.forEach(f => f(val));
         this.ondata_callbacks.length = 0;
     }
-}
 
-async function test() {
-    let q = new AsyncQueue<string>();
-    q.push('SB');
-    console.log(await q.front());
-    q.popFront();
-    setTimeout(() => { q.push('SB2'); }, 1500);
-    console.log(await q.front());
+    splice(start: number, delete_count: number) {
+        this.data.splice(start, delete_count);
+    }
 }

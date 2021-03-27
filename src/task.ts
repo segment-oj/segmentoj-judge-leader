@@ -1,4 +1,5 @@
 import axios from "axios";
+import { AsyncQueue } from "./async-queue";
 import { judger_queue } from "./judger";
 
 export class Task {
@@ -27,28 +28,16 @@ export class Task {
 
 export class TaskQueue {
     constructor() {
-        this.queue = new Array<Task>();
+        this.queue = new AsyncQueue<Task>();
     }
 
-    queue: Array<Task>;
+    queue: AsyncQueue<Task>;
 
     push(task: Task) {
         this.queue.push(task);
     }
-}
 
-export class TaskAssigner {
-    start() {
-        setInterval(this.assign_task, 10);
-    }
-
-    async assign_task() {
-        if (task_queue.queue.length <= 0) {
-            return;
-        }
-
-        const task: Task = task_queue.queue[0];
-
+    async assign_task(task: Task) {
         for (let i = 0; i < judger_queue.queue.length; i++) {
             const judger = judger_queue.queue[i];
 
@@ -65,19 +54,19 @@ export class TaskAssigner {
                     memory_limit: task.memory_limit,
                     testdata_url: task.testdata_url,
                     code: task.code,
-                })
+                });
 
-                judger_queue.queue[i].used_thread++;
-                running_task_queue.push(task_queue.queue[0]);
+                judger.used_thread++;
+                running_task_queue.push(await task_queue.queue.front());
                 task_queue.queue.splice(0, 1);
 
                 return;
             } catch {
                 judger_queue.queue[i].err_times++;
 
-                if (judger_queue.queue[i].err_times >= 5) {
+                if (judger_queue.queue[i].err_times >= 10) {
                     console.log(`[Judger] ERR: Expelled judger on IP: ${judger_queue.queue[i].ip} (ERR for ${judger_queue.queue[i].err_times} times)`);
-                    setTimeout(() => { judger_queue.queue.splice(i, 1); }, 5);
+                    judger_queue.queue.splice(i, 1);
                 }
 
                 continue;

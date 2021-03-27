@@ -8,20 +8,26 @@ import { DataServer, data_server_queue } from './data-server';
 import { Judger, judger_queue } from './judger';
 import { Config, get_config } from './config';
 import { get_task } from './server';
-import { TaskAssigner, task_queue, running_task_queue } from './task';
+import { task_queue, running_task_queue } from './task';
 import { login } from './login';
 import { parse_ip } from './utilities';
 
 const config: Config = get_config();
 let judger_threads = 0;
 
+async function task_assigner() {
+    let task = await task_queue.queue.front();
+    await task_queue.assign_task(task);
+
+    setImmediate(task_assigner);
+}
+
 login(config)
     .then(token => {
         console.log('[Login] Success');
 
-        // Set up task assigner
-        let task_assigner: TaskAssigner = new TaskAssigner();
-        task_assigner.start();
+        // Task Assigner
+        task_assigner();
 
         // Socket.io connection with judger port
         const judger_port_socket = io(config.judger_port_uri, {
@@ -91,7 +97,7 @@ login(config)
         // Judger finish task
         express_server.delete('/api/task', (req, res) => {
             const ip = parse_ip(req);
-            for (let i = 0; i < running_task_queue.queue.length; i++) {
+            for (let i = 0; i < running_task_queue.queue.length(); i++) {
                 if (running_task_queue.queue[i].id == req.body.id) {
                     running_task_queue.queue.splice(i, 1);
                     break;
