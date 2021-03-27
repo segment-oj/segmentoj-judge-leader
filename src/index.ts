@@ -47,25 +47,45 @@ login(config)
         // Data server check-in
         express_server.post('/api/data-server', (req, res) => {
             const ip = parse_ip(req);
-            data_server_queue.push(new DataServer(ip));
 
-            console.log(`[Data Server] check-in on IP ${ip}`);
+            try {
+                if (!data_server_queue.find(ip)) {
+                    data_server_queue.push(new DataServer(ip));
+                    console.log(`[Data Server] check-in on IP ${ip}`);
+                } else {
+                    data_server_queue.edit(ip, new DataServer(ip));
+                    console.log(`[Data Server] recheck-in on IP ${ip}`);
+                }
 
-            res.status(200).end();
+                res.status(200).end();
+            } catch (err) {
+                console.log(`[Data Server] ERR: Check-in (${err})`);
+                res.status(500).end();
+            }
         });
 
         // Judger check-in
         express_server.post('/api/judger', (req, res) => {
             const ip = parse_ip(req);
 
-            judger_queue.push(new Judger(ip, req.body.max_thread, 0));
+            try {
+                if (!judger_queue.find(ip)) {
+                    judger_queue.push(new Judger(ip, req.body.max_thread, 0));
 
-            judger_threads += req.body.max_thread;
-            judger_port_socket.emit('set-priority', judger_threads);
+                    judger_threads += req.body.max_thread;
+                    judger_port_socket.emit('set-priority', judger_threads);
 
-            console.log(`[Judger] check-in on IP ${ip}`);
+                    console.log(`[Judger] check-in on IP ${ip}`);
+                } else {
+                    judger_queue.edit(ip, new Judger(ip, req.body.max_thread, 0));
+                    console.log(`[Judger] recheck-in on IP ${ip}`);
+                }
 
-            res.status(200).end();
+                res.status(200).end();
+            } catch (err) {
+                console.log(`[Judger] ERR: Check-in (${err})`);
+                res.status(500).end();
+            }
         });
 
         // Judger finish task

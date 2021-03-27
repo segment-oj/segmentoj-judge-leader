@@ -82,6 +82,26 @@ export class DataServerQueue {
         return max_ip;
     }
 
+    find(ip: string): boolean {
+        for (let server of this.queue) {
+            if (server.ip == ip) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    edit(ip: string, new_data: DataServer) {
+        for (let i = 0; i < this.queue.length; i++) {
+            if (this.queue[i].ip == ip) {
+                this.queue[i] = new_data;
+                return;
+            }
+        }
+
+        throw "Data-Server not found";
+    }
 }
 
 export let data_server_queue: DataServerQueue = new DataServerQueue();
