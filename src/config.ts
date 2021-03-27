@@ -40,7 +40,7 @@ export function get_config(): Config {
     try {
         config = JSON.parse(content.toString());
     } catch {
-        console.log('[Config] json parsing ERR');
+        console.log('[Config] ERR: Parsing JSON in config');
     }
 
     return use_default_config(config, default_config);
