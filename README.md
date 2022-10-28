@@ -1,3 +1,5 @@
+# Abandoned because of new framework design
+
 # Sgmentoj Judge Leader
 Segment OJ judger leader
 
